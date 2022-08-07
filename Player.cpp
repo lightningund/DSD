@@ -1,17 +1,13 @@
 #include "Player.h"
 
-Player::Player() {
-	pos = Vec2{ 100, 100 };
-	dir = Vec2{ 1, 0 };
-	wep = Weapon(10, 10);
-}
+Player::Player() : pos{100, 100}, dir{1, 0}, wep{10, 10} {}
 
 void Player::shoot() {}
 
 void Player::show(sf::RenderWindow& wind) {
-	Circle c(width / 2.0, height / 2.0);
+	Circle c(width / 2.0f);
 	c.setPosition((float)pos.x, (float)pos.y);
-	c.setFillColor(BLUE);
+	c.setFillColor(col_to_sf_color(BLUE));
 	wind.draw(c);
 }
 
