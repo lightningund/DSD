@@ -4,33 +4,27 @@
 #define PLAYER
 
 #include "Lib.h"
-#include "Mech.h"
 #include "Weapon.h"
 
 class Player {
 private:
-	const int width = 50;
-	const int height = 50;
-	const int shotCooldown = 30;
-	int shotTimer = 0;
+	const int width{50};
+	const int height{50};
+	int max_health{100};
+	int health{100};
 	Weapon wep;
-	Mech mech;
-	Vec2f pos;  //Position
-	Vec2f dir; //Facing direction
-	bool shooting; //Debug
-	bool shot;
+	Vec2 pos; //Position
+	Vec2 dir; //Facing direction
 public:
 	Player();
 	void shoot();
 	void show(sf::RenderWindow&);
 	void update();
-	void move(float, float);
-	void move(Vec2f);
-	void face(float, float);
-	void face(Vec2f);
-	Vec2f getPos();
-	Vec2f getCenter();
-	float getX();
-	float getY();
+	void move(double, double);
+	void move(Vec2);
+	void face(double, double);
+	void face(Vec2);
+	Vec2 getPos();
+	Vec2 getCenter();
 };
 #endif //!PLAYER

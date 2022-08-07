@@ -31,38 +31,38 @@ typedef struct {
 	int a;
 } Col;
 
-//2D-Vector with floats
-struct Vec2f{
-	float x;
-	float y;
+//2D-Vector with doubles
+struct Vec2{
+	double x;
+	double y;
 
-	void operator += (Vec2f a) {
+	void operator += (Vec2 a) {
 		this->x += a.x;
 		this->y += a.y;
 	}
-	void operator -= (Vec2f a) {
+	void operator -= (Vec2 a) {
 		this->x -= a.x;
 		this->y -= a.y;
 	}
-	void operator *= (Vec2f a) {
+	void operator *= (Vec2 a) {
 		this->x *= a.x;
 		this->y *= a.y;
 	}
-	void operator /= (Vec2f a) {
+	void operator /= (Vec2 a) {
 		this->x /= a.x;
 		this->y /= a.y;
 	}
-	Vec2f operator + (Vec2f a) {
-		return Vec2f{ this->x + a.x, this->y + a.y };
+	Vec2 operator + (Vec2 a) {
+		return Vec2{ this->x + a.x, this->y + a.y };
 	}
-	Vec2f operator - (Vec2f a) {
-		return Vec2f{ this->x - a.x, this->y - a.y };
+	Vec2 operator - (Vec2 a) {
+		return Vec2{ this->x - a.x, this->y - a.y };
 	}
-	Vec2f operator * (float a) {
-		return Vec2f{ this->x * a, this->y * a };
+	Vec2 operator * (double a) {
+		return Vec2{ this->x * a, this->y * a };
 	}
-	Vec2f operator / (float a) {
-		return Vec2f{ this->x / a, this->y / a };
+	Vec2 operator / (double a) {
+		return Vec2{ this->x / a, this->y / a };
 	}
 };
 
@@ -91,14 +91,11 @@ Col color(int gray, int alpha);
 Col color(int red, int green, int blue);
 Col color(int red, int green, int blue, int alpha);
 
-int gcd(int a, int b); //Greatest Common Denominator
-int lcm(int a, int b); //Lowest Common Mulitple
-int limitVal(int limitee, int limit); //Limit a number
-int limitVal(int limitee, int upperLim, int lowerLim); //Limit a number with different upper and lower bounds
-bool isLimited(int limitee, int limit); //Check if a number is outside of bounds
-bool isLimited(int limitee, int upperLim, int lowerLim); //Check if a number is outside of different upper and lower bounds
-bool overlap(float ax, float ay, float aw, float ah, float bx, float by, float bw, float bh); //Check if 2 squares overlap
-bool isPrime(int n); //Brute Force-ish method of prime checking
-float getAngle(Vec2f); //Find the angle of a vector
-float radiansToDegrees(float radians);
+double limitVal(double limitee, double limit); //Limit a number
+double limitVal(double limitee, double upperLim, double lowerLim); //Limit a number with different upper and lower bounds
+bool isLimited(double limitee, double limit); //Check if a number is outside of bounds
+bool isLimited(double limitee, double upperLim, double lowerLim); //Check if a number is outside of different upper and lower bounds
+bool overlap(double ax, double ay, double aw, double ah, double bx, double by, double bw, double bh); //Check if 2 squares overlap
+double getAngle(Vec2); //Find the angle of a vector
+double radiansToDegrees(double radians);
 #endif //!METHLIB

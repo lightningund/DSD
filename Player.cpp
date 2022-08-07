@@ -1,70 +1,41 @@
 #include "Player.h"
 
 Player::Player() {
-	shooting = false;
-	pos = Vec2f{ 100, 100 };
-	dir = Vec2f{ 1, 0 };
+	pos = Vec2{ 100, 100 };
+	dir = Vec2{ 1, 0 };
 	wep = Weapon(10, 10);
 }
 
-void Player::shoot() {
-	if (!shot) {
-		shooting = true;
-		shot = true;
-	}
-}
+void Player::shoot() {}
 
 void Player::show(sf::RenderWindow& wind) {
-	Circle c(width / 2, height / 2);
-	c.setPosition(pos.x, pos.y);
+	Circle c(width / 2.0, height / 2.0);
+	c.setPosition((float)pos.x, (float)pos.y);
 	c.setFillColor(BLUE);
 	wind.draw(c);
-
-	if (shooting) {
-		wep.shoot(wind, dir, pos + Vec2f{float(width / 2), float(height / 2)});
-	}
 }
 
-void Player::update() {
-	shooting = false;
-	if (shot) {
-		if (shotTimer >= 60 / wep.getFireRate()) {
-			shot = false;
-			shotTimer = 0;
-		}
-		else {
-			shotTimer ++;
-		}
-	}
+void Player::update() {}
+
+void Player::move(double dx, double dy) {
+	this->move(Vec2{dx, dy});
 }
 
-void Player::move(float dx, float dy) {
-	this->move(Vec2f{ dx, dy });
-}
-
-void Player::move(Vec2f d) {
+void Player::move(Vec2 d) {
 	this->pos += d;
 }
 
-void Player::face(float dx, float dy) {
-	this->face(Vec2f{ dx, dy });
+void Player::face(double dx, double dy) {
+	this->face(Vec2{dx, dy});
 }
-void Player::face(Vec2f d) {
+void Player::face(Vec2 d) {
 	this->dir = d;
 }
 
-Vec2f Player::getPos() {
+Vec2 Player::getPos() {
 	return pos;
 }
 
-Vec2f Player::getCenter() {
-	return pos + Vec2f{(float)width / 2, (float)height / 2};
-}
-
-float Player::getX() {
-	return pos.x;
-}
-
-float Player::getY() {
-	return pos.y;
+Vec2 Player::getCenter() {
+	return pos + Vec2{(double)width / 2, (double)height / 2};
 }

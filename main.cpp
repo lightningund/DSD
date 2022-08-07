@@ -4,7 +4,6 @@
 
 #include "Lib.h"
 #include "Weapon.h"
-#include "Mech.h"
 #include "Player.h"
 
 constexpr auto WIDTH = 800;
@@ -13,7 +12,11 @@ constexpr auto frameUpdateTime = 0.5;
 
 sf::RenderWindow* wind;
 
-int frameCount = 0, frameCountCounter = 0, frameRate, frameTime, frameTimeCounter = 0;
+int frameCount = 0;
+int frameCountCounter = 0;
+double frameRate;
+sf::Int64 frameTime;
+sf::Int64 frameTimeCounter = 0;
 
 Player player;
 
@@ -37,7 +40,7 @@ int main() {
 				frameTimeCounter = 0;
 				frameRate = frameCountCounter / frameUpdateTime;
 				frameCountCounter = 0;
-				std::cout << frameTime / 1000 << "ms " << frameRate << "fps" << std::endl;
+				std::cout << frameTime / 1000 << "ms " << frameRate << "fps\n";
 			}
 			clk.restart();
 

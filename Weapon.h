@@ -7,16 +7,14 @@
 
 #include "Lib.h"
 
-static class Weapon {
+class Weapon {
 protected:
-	float dmg, bulletSpeed, fireRate;
-	int bulletType, numBullets;
+	double dmg{0};
+	double bullet_speed{0};
+	double fire_rate{0};
+	int num_bullets{0};
 public:
 	Weapon();
-	Weapon(float dmg, float fireRate);
-	void shoot(RWind&);
-	void shoot(RWind&, Vec2f);
-	void shoot(RWind&, Vec2f, Vec2f);
-	float getFireRate();
+	Weapon(double dmg, double fire_rate);
 };
 #endif //!WEAPON
