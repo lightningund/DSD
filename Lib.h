@@ -20,21 +20,10 @@ typedef struct {
 	uint8_t a;
 } Col;
 
-constexpr Col BLACK{0, 0, 0, 255};
-constexpr Col GREY{128, 128, 128, 255};
-constexpr Col WHITE{255, 255, 255, 255};
-constexpr Col RED{255, 0, 0, 255};
-constexpr Col GREEN{0, 255, 0, 255};
-constexpr Col BLUE{0, 0, 255, 255};
-constexpr Col YELLOW{255, 255, 0, 255};
-constexpr Col PURPLE{255, 0, 255, 255};
-constexpr Col CYAN{0, 255, 255, 255};
-constexpr Col ORANGE{255, 128, 0, 255};
-
 //2D-Vector with doubles
 struct Vec2{
-	double x;
-	double y;
+	double x{};
+	double y{};
 
 	void operator+= (Vec2 a);
 	void operator-= (Vec2 a);
@@ -61,6 +50,9 @@ Col color(uint8_t red, uint8_t green, uint8_t blue);
 // Generate a new Color object with red, green, blue, and alpha inputs
 Col color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
 
+// Generate a new Color object with red, green, blue, and alpha inputs, all in one number
+Col color(uint32_t val);
+
 //Limit a number
 double limitVal(double limitee, double limit);
 
@@ -84,4 +76,15 @@ double radiansToDegrees(double radians);
 
 // Convert Col struct to sf::Color object
 sf::Color col_to_sf_color(Col col);
+
+constexpr Col BLACK{0, 0, 0, 255};
+constexpr Col GREY{128, 128, 128, 255};
+constexpr Col WHITE{255, 255, 255, 255};
+constexpr Col RED{255, 0, 0, 255};
+constexpr Col GREEN{0, 255, 0, 255};
+constexpr Col BLUE{0, 0, 255, 255};
+constexpr Col YELLOW{255, 255, 0, 255};
+constexpr Col PURPLE{255, 0, 255, 255};
+constexpr Col CYAN{0, 255, 255, 255};
+constexpr Col ORANGE{255, 128, 0, 255};
 #endif //!METHLIB

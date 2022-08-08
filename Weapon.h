@@ -9,10 +9,10 @@
 
 class Weapon {
 protected:
-	double dmg{0};
-	double bullet_speed{0};
-	double fire_rate{0};
-	int num_bullets{0};
+	double dmg{};
+	double bullet_speed{};
+	double fire_rate{};
+	int num_bullets{};
 public:
 	Weapon();
 	Weapon(double dmg, double fire_rate);

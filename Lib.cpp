@@ -1,22 +1,23 @@
 #include "Lib.h"
 
 Col color(uint8_t gray) {
-	Col col{gray, gray, gray, 255};
-	return col;
+	return Col{gray, gray, gray, 255};
 }
 
 Col color(uint8_t gray, uint8_t alpha) {
-	Col col{gray, gray, gray, alpha};
-	return col;
+	return Col{gray, gray, gray, alpha};
 }
 
 Col color(uint8_t red, uint8_t green, uint8_t blue) {
-	Col col{red, green, blue, 255};
-	return col;
+	return Col{red, green, blue, 255};
 }
 
 Col color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
-	Col col{red, green, blue, alpha};
+	return Col{red, green, blue, alpha};
+}
+
+Col color(uint32_t val) {
+	Col col{val >> 24, (val >> 16) & 0xFF, (val >> 8) & 0xFF, val & 0xFF};
 	return col;
 }
 

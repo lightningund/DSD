@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player() : pos{100, 100}, dir{1, 0}, wep{10, 10} {}
+Player::Player() : pos{100, 100}, dir{1, 0} {}
 
 void Player::shoot() {}
 
