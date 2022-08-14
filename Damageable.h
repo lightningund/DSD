@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Object.h"
 
-class Damageable : Object {
+class Damageable : public Object {
 protected:
 	const double max_health{100};
 	double health{100};

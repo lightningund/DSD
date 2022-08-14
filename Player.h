@@ -4,7 +4,7 @@
 #include "Weapon.h"
 #include "Damageable.h"
 
-class Player : Damageable {
+class Player : public Damageable {
 private:
 	Weapon wep{};
 	Vec2 dir{}; //Facing direction

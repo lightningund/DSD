@@ -75,17 +75,18 @@ void update() {
 		player.move(1, 0);
 	}
 	if (M::isButtonPressed(M::Left)) {
-		player.shoot();
+		//player.shoot();
+		player.take_damage(10);
 	}
 	if (KB::isKeyPressed(KB::Escape)) {
 		wind->close();
 	}
 	sf::Vector2i MP = M::getPosition(*wind);
-	player.face(((MP.x - player.getCenter().x) / 10), ((MP.y - player.getCenter().y) / 10));
+	//player.face(((MP.x - player.getCenter().x) / 10), ((MP.y - player.getCenter().y) / 10));
 }
 
 void render() {
 	wind->clear();
-	player.show(*wind);
+	player.render(*wind);
 	wind->display();
 }
