@@ -1,12 +1,15 @@
 #include "Player.h"
 
-Player::Player() : pos{100, 100}, dir{1, 0} {}
+Player::Player() : dir{1, 0} {
+	hitbox.pos = Vec2{100, 100};
+}
 
 void Player::shoot() {}
 
-void Player::show(sf::RenderWindow& wind) {
-	Circle c(width / 2.0f);
-	c.setPosition((float)pos.x, (float)pos.y);
+void Player::render(sf::RenderWindow& wind) {
+	Damageable::render(wind);
+	Circle c(hitbox.size.x / 2.0f);
+	c.setPosition((float)hitbox.pos.x, (float)hitbox.pos.y);
 	c.setFillColor(col_to_sf_color(BLUE));
 	wind.draw(c);
 }
@@ -14,24 +17,16 @@ void Player::show(sf::RenderWindow& wind) {
 void Player::update() {}
 
 void Player::move(double dx, double dy) {
-	this->move(Vec2{dx, dy} * 10);
+	move(Vec2{dx, dy} * 10);
 }
 
 void Player::move(Vec2 d) {
-	this->pos += d;
+	hitbox.pos += d;
 }
 
 void Player::face(double dx, double dy) {
-	this->face(Vec2{dx, dy});
+	face(Vec2{dx, dy});
 }
 void Player::face(Vec2 d) {
-	this->dir = d;
-}
-
-Vec2 Player::getPos() {
-	return pos;
-}
-
-Vec2 Player::getCenter() {
-	return pos + Vec2{static_cast<double>(width), static_cast<double>(height)} / 2;
+	dir = d;
 }

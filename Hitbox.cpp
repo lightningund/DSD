@@ -1,5 +1,4 @@
 #include "Hitbox.h"
-#include "Lib.h"
 
 bool Hitbox::point_overlaps(Vec2 point) {
 	bool x_overlap = point.x > pos.x && point.x < pos.x + size.x;

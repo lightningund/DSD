@@ -4,9 +4,9 @@
 
 struct Hitbox {
 private:
-	Vec2 pos{};
-	Vec2 size{};
 	bool has_collision{true};
 public:
+	Vec2 pos{};
+	Vec2 size{};
 	bool point_overlaps(Vec2 point);
 };
