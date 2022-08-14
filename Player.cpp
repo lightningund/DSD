@@ -14,7 +14,7 @@ void Player::show(sf::RenderWindow& wind) {
 void Player::update() {}
 
 void Player::move(double dx, double dy) {
-	this->move(Vec2{dx, dy});
+	this->move(Vec2{dx, dy} * 10);
 }
 
 void Player::move(Vec2 d) {
@@ -33,5 +33,5 @@ Vec2 Player::getPos() {
 }
 
 Vec2 Player::getCenter() {
-	return pos + Vec2{(double)width / 2, (double)height / 2};
+	return pos + Vec2{static_cast<double>(width), static_cast<double>(height)} / 2;
 }

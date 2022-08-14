@@ -82,7 +82,7 @@ bool overlap(double ax, double ay, double aw, double ah, double bx, double by, d
 }
 
 double getAngle(Vec2 vec) {
-	return atan2f((float)vec.x, (float)vec.y);
+	return atan2f(vec.x, vec.y);
 }
 
 double radiansToDegrees(double radians) {

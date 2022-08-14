@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef WEAPON
-#define WEAPON
-
 #include <SFML/Graphics.hpp>
 
 #include "Lib.h"
@@ -17,4 +14,3 @@ public:
 	Weapon();
 	Weapon(double dmg, double fire_rate);
 };
-#endif //!WEAPON

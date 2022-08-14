@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef METHLIB
-#define METHLIB
-
 #include<SFML/Graphics.hpp>
 
 typedef sf::CircleShape Circle;
@@ -87,4 +84,3 @@ constexpr Col YELLOW{255, 255, 0, 255};
 constexpr Col PURPLE{255, 0, 255, 255};
 constexpr Col CYAN{0, 255, 255, 255};
 constexpr Col ORANGE{255, 128, 0, 255};
-#endif //!METHLIB

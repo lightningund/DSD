@@ -1,17 +1,13 @@
 #pragma once
 
-#ifndef PLAYER
-#define PLAYER
-
 #include "Lib.h"
 #include "Weapon.h"
+#include "Damageable.h"
 
-class Player {
+class Player : Damageable {
 private:
 	const int width{50};
 	const int height{50};
-	double max_health{100};
-	double health{100};
 	Weapon wep{};
 	Vec2 pos{}; //Position
 	Vec2 dir{}; //Facing direction
@@ -27,4 +23,3 @@ public:
 	Vec2 getPos();
 	Vec2 getCenter();
 };
-#endif //!PLAYER

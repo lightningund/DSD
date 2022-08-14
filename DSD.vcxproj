@@ -87,12 +87,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Damageable.cpp" />
+    <ClCompile Include="Hitbox.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lib.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Damageable.h" />
+    <ClInclude Include="Hitbox.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="Lib.h" />

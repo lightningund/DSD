@@ -5,10 +5,16 @@
     <ClCompile Include="Lib.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="Damageable.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Hitbox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Weapon.h" />
+    <ClInclude Include="Damageable.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Hitbox.h" />
   </ItemGroup>
 </Project>
