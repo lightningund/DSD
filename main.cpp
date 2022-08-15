@@ -1,62 +1,66 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <random>
+#include <filesystem>
+#include <span>
 
 #include "Lib.h"
 #include "Weapon.h"
 #include "Player.h"
+#include "Sign.h"
 
-constexpr auto WIDTH = 800;
-constexpr auto HEIGHT = 800;
-constexpr auto frameUpdateTime = 0.5;
-
-sf::RenderWindow* wind;
-
-int frameCount = 0;
-int frameCountCounter = 0;
-double frameRate;
-sf::Int64 frameTime;
-sf::Int64 frameTimeCounter = 0;
-
-Player player;
-
-void update();
-void render();
+void update(sf::RenderWindow& wind, Player& player);
+void render_objs(sf::RenderWindow& wind, std::span<Object*> objs);
 
 int main() {
+	constexpr auto WIDTH = 800;
+	constexpr auto HEIGHT = 800;
+	constexpr auto STAT_UPDATE_RATE = 0.5;
+
+	int frame_counter = 0;
+	sf::Int64 frame_time_counter = 0;
+
+	std::vector<Object*> objs;
+
+	Player player;
+	objs.push_back(&player);
+
+	Sign sign;
+	objs.push_back(&sign);
+
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Deep Sea Death");
-
-	wind = &window;
-
+	
 	sf::Clock clk;
 
 	while (window.isOpen()) { //Main Loop
 		if (clk.getElapsedTime().asMicroseconds() >= (1000000 / 60)) {
-			frameTimeCounter += clk.getElapsedTime().asMicroseconds();
-			frameCountCounter ++;
+			frame_time_counter += clk.getElapsedTime().asMicroseconds();
+			frame_counter ++;
 
-			if (frameTimeCounter >= 1000000 * frameUpdateTime) {
-				frameTime = clk.getElapsedTime().asMicroseconds();
-				frameTimeCounter = 0;
-				frameRate = frameCountCounter / frameUpdateTime;
-				frameCountCounter = 0;
-				std::cout << frameTime / 1000 << "ms " << frameRate << "fps\n";
+			if (frame_time_counter >= 1000000 * STAT_UPDATE_RATE) {
+				sf::Int64 frame_time = clk.getElapsedTime().asMicroseconds();
+				double frame_rate = frame_counter / STAT_UPDATE_RATE;
+				frame_time_counter = 0;
+				frame_counter = 0;
+
+				std::cout << frame_time / 1000 << "ms " << frame_rate << "fps\n";
 			}
 			clk.restart();
 
-			update();
-			render();
+			update(window, player);
+
+			render_objs(window, objs);
 		}
 	}
 
 	return 0;
 }
 
-void update() {
+void update(sf::RenderWindow& wind, Player& player) {
 	sf::Event event;
-	while (wind->pollEvent(event)) {
+	while (wind.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {
-			wind->close();
+			wind.close();
 		}
 	}
 
@@ -75,18 +79,20 @@ void update() {
 		player.move(1, 0);
 	}
 	if (M::isButtonPressed(M::Left)) {
-		//player.shoot();
-		player.take_damage(10);
+		player.shoot();
+		//player.take_damage(10);
 	}
 	if (KB::isKeyPressed(KB::Escape)) {
-		wind->close();
+		wind.close();
 	}
-	sf::Vector2i MP = M::getPosition(*wind);
+	sf::Vector2i MP = M::getPosition(wind);
 	//player.face(((MP.x - player.getCenter().x) / 10), ((MP.y - player.getCenter().y) / 10));
 }
 
-void render() {
-	wind->clear();
-	player.render(*wind);
-	wind->display();
+void render_objs(sf::RenderWindow& wind, std::span<Object*> objs) {
+	wind.clear();
+	for (Object* obj : objs) {
+		obj->render(wind);
+	}
+	wind.display();
 }

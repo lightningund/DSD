@@ -91,6 +91,7 @@
     <ClCompile Include="Hitbox.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Sign.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lib.cpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="Hitbox.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Sign.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="Lib.h" />
   </ItemGroup>

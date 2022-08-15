@@ -90,6 +90,9 @@ double radiansToDegrees(double radians) {
 }
 
 sf::Color col_to_sf_color(Col col) {
-	sf::Color sf_col{col.r, col.g, col.b, col.a};
-	return sf_col;
+	return sf::Color{col.r, col.g, col.b, col.a};;
+}
+
+sf::Vector2f vec2_to_sf_vec2f(Vec2 vec) {
+	return sf::Vector2f{float(vec.x), float(vec.y)};
 }

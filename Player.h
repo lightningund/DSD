@@ -10,11 +10,11 @@ private:
 	Vec2 dir{}; //Facing direction
 public:
 	Player();
-	void render(sf::RenderWindow& wind);
 	void shoot();
 	void update();
 	void move(double, double);
 	void move(Vec2);
 	void face(double, double);
 	void face(Vec2);
+	Vec2 get_pos();
 };

@@ -71,8 +71,11 @@ double getAngle(Vec2);
 // Convert an input in radians into degrees
 double radiansToDegrees(double radians);
 
-// Convert Col struct to sf::Color object
+// Convert from Col to sf::Color
 sf::Color col_to_sf_color(Col col);
+
+// Convert from Vec2 to sf::Vector2f
+sf::Vector2f vec2_to_sf_vec2f(Vec2 vec);
 
 constexpr Col BLACK{0, 0, 0, 255};
 constexpr Col GREY{128, 128, 128, 255};
