@@ -47,9 +47,9 @@ int main() {
 			}
 			clk.restart();
 
-			update(window, player);
+			update(window, manager);
 
-			render_objs(window, objs);
+			render_objs(window, manager);
 		}
 	}
 

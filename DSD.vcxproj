@@ -88,7 +88,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ComponentPool.cpp" />
-    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lib.cpp" />
@@ -96,7 +95,6 @@
   <ItemGroup>
     <ClInclude Include="ComponentPool.h" />
     <ClInclude Include="Components.h" />
-    <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Lib.h" />
   </ItemGroup>

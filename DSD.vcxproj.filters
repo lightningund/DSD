@@ -3,13 +3,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lib.cpp" />
-    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="ComponentPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib.h" />
-    <ClInclude Include="Entity.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ComponentPool.h" />

@@ -1,4 +1,6 @@
 #pragma once
+
+#include <SFML/Graphics.hpp>
 #include "Lib.h"
 
 namespace Components {
@@ -22,5 +24,10 @@ namespace Components {
 		double bullet_speed{};
 		double fire_rate{};
 		int num_bullets{};
+	};
+
+	struct Renderable {
+		sf::Texture texture;
+		sf::Sprite sprite;
 	};
 }
