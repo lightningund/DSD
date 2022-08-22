@@ -1,18 +1,15 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <random>
-#include <filesystem>
-#include <span>
 
 #include "Lib.h"
-#include "Weapon.h"
-#include "Player.h"
-#include "Sign.h"
+#include "Components.h"
+#include "EntityManager.h"
 
-void update(sf::RenderWindow& wind, Player& player);
-void render_objs(sf::RenderWindow& wind, std::span<Object*> objs);
+void update(sf::RenderWindow& wind, EntityManager manager);
+void render_objs(sf::RenderWindow& wind, EntityManager manager);
 
 int main() {
+
 	constexpr auto WIDTH = 800;
 	constexpr auto HEIGHT = 800;
 	constexpr auto STAT_UPDATE_RATE = 0.5;
@@ -20,13 +17,16 @@ int main() {
 	int frame_counter = 0;
 	sf::Int64 frame_time_counter = 0;
 
-	std::vector<Object*> objs;
+	EntityManager manager;
 
-	Player player;
-	objs.push_back(&player);
+	EntityID player = manager.create_entity();
+	manager.assign_component<Components::Hitbox>(player);
+	manager.assign_component<Components::Damageable>(player);
 
-	Sign sign;
-	objs.push_back(&sign);
+	EntityID sign = manager.create_entity();
+	manager.assign_component<Components::Hitbox>(sign);
+	manager.assign_component<Components::Damageable>(sign);
+	manager.assign_component<Components::Sign>(sign);
 
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Deep Sea Death");
 	
@@ -56,7 +56,7 @@ int main() {
 	return 0;
 }
 
-void update(sf::RenderWindow& wind, Player& player) {
+void update(sf::RenderWindow& wind, EntityManager manager) {
 	sf::Event event;
 	while (wind.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {
@@ -89,10 +89,39 @@ void update(sf::RenderWindow& wind, Player& player) {
 	//player.face(((MP.x - player.getCenter().x) / 10), ((MP.y - player.getCenter().y) / 10));
 }
 
-void render_objs(sf::RenderWindow& wind, std::span<Object*> objs) {
+void render_objs(sf::RenderWindow& wind, EntityManager manager) {
 	wind.clear();
-	for (Object* obj : objs) {
+	for (Entity* obj : objs) {
 		obj->render(wind);
 	}
 	wind.display();
+}
+
+void render_damageable(sf::RenderWindow& wind, EntityID obj) {
+	constexpr auto healthbar_height = 20;
+	constexpr auto healthbar_trim = 3;
+
+	Hitbox hbox = obj.hitbox;
+
+	Rect bar_bg{{float(hbox.size.x), float(healthbar_height)}};
+	bar_bg.setPosition(float(hbox.pos.x), float(hbox.pos.y + hbox.size.y));
+	bar_bg.setFillColor(col_to_sf_color(GREY));
+	Rect bar{bar_bg};
+	bar.move(healthbar_trim, healthbar_trim);
+	bar.setSize({float((hbox.size.x - healthbar_trim * 2) * obj.health_percent()), float(healthbar_height - healthbar_trim * 2)});
+	bar.setFillColor(col_to_sf_color(RED));
+	wind.draw(bar_bg);
+	wind.draw(bar);
+}
+
+void player_shoot() {
+
+}
+
+void player_move(double, double) {
+
+}
+
+void player_face(double, double) {
+
 }

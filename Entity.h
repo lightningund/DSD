@@ -4,12 +4,10 @@
 #include "Hitbox.h"
 #include "Lib.h"
 
-class Object {
-protected:
+class Entity {
+public:
 	sf::Texture texture;
 	sf::Sprite sprite;
 	Hitbox hitbox;
-public:
-	virtual void render(sf::RenderWindow& wind);
-	std::string test();
+	void render(sf::RenderWindow& wind);
 };

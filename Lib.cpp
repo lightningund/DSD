@@ -21,32 +21,47 @@ Col color(uint32_t val) {
 	return col;
 }
 
-void Vec2::operator+= (Vec2 a) {
+template <typename T>
+void Vec2G<T>::operator+= (Vec2G<T> a) {
 	x += a.x;
 	y += a.y;
 }
-void Vec2::operator-= (Vec2 a) {
+
+template <typename T>
+void Vec2G<T>::operator-= (Vec2G<T> a) {
 	x -= a.x;
 	y -= a.y;
 }
-void Vec2::operator*= (double a) {
+
+template <typename T>
+void Vec2G<T>::operator*= (T a) {
 	x *= a;
 	y *= a;
 }
-void Vec2::operator/= (double a) {
+
+template <typename T>
+void Vec2G<T>::operator/= (T a) {
 	x /= a;
 	y /= a;
 }
-Vec2 Vec2::operator+ (Vec2 a) {
-	return Vec2{x + a.x, y + a.y};
+
+template <typename T>
+Vec2G<T> Vec2G<T>::operator+ (Vec2G<T> a) {
+	return Vec2G<T>{x + a.x, y + a.y};
 }
-Vec2 Vec2::operator- (Vec2 a) {
+
+template <typename T>
+Vec2G<T> Vec2G<T>::operator- (Vec2G<T> a) {
 	return Vec2{x - a.x, y - a.y};
 }
-Vec2 Vec2::operator* (double a) {
+
+template <typename T>
+Vec2G<T> Vec2G<T>::operator* (T a) {
 	return Vec2{x * a, y * a};
 }
-Vec2 Vec2::operator/ (double a) {
+
+template <typename T>
+Vec2G<T> Vec2G<T>::operator/ (T a) {
 	return Vec2{x / a, y / a};
 }
 
@@ -96,3 +111,10 @@ sf::Color col_to_sf_color(Col col) {
 sf::Vector2f vec2_to_sf_vec2f(Vec2 vec) {
 	return sf::Vector2f{float(vec.x), float(vec.y)};
 }
+
+// I wrote this code and I don't want to lose it so I'm stashing it away here for the moment
+// bool Hitbox::point_overlaps(Vec2 point) {
+//	bool x_overlap = point.x > pos.x && point.x < pos.x + size.x;
+//	bool y_overlap = point.y > pos.y && point.y < pos.y + size.y;
+//	return x_overlap && y_overlap;
+// }

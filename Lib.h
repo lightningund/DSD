@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <bitset>
 
 typedef sf::CircleShape Circle;
 typedef sf::RectangleShape Rect;
@@ -9,31 +10,47 @@ typedef sf::Window Wind;
 typedef sf::Keyboard KB;
 typedef sf::Mouse M;
 
+typedef unsigned long long EntityID;
+typedef uint8_t ComponentID;
+
+// This is 2^64-1, we are not going to make component pools that big
+//constexpr EntityID MAX_ENTITIES = (1 << (sizeof(EntityID) * 8)) - 1;
+constexpr EntityID MAX_ENTITIES = 10000;
+constexpr ComponentID MAX_COMPONENTS = (1 << (sizeof(ComponentID) * 8)) - 1;
+typedef std::bitset<MAX_COMPONENTS> ComponentMask;
+
+ComponentID component_counter {0};
+template <typename T>
+ComponentID get_component_id() {
+	static ComponentID component_id = component_counter ++;
+	return component_id;
+}
+
 //Color
-typedef struct {
+typedef struct Col {
 	uint8_t r;
 	uint8_t g;
 	uint8_t b;
 	uint8_t a;
 } Col;
 
-//2D-Vector with doubles
-struct Vec2{
-	double x{};
-	double y{};
+//2D-Vector
+template <typename T>
+struct Vec2G {
+	T x{};
+	T y{};
 
-	void operator+= (Vec2 a);
-	void operator-= (Vec2 a);
-	void operator*= (double a);
-	void operator/= (double a);
-	Vec2 operator+ (Vec2 a);
-	Vec2 operator- (Vec2 a);
-	Vec2 operator* (double a);
-	Vec2 operator/ (double a);
+	void operator+= (Vec2G<T> a);
+	void operator-= (Vec2G<T> a);
+	void operator*= (T a);
+	void operator/= (T a);
+	Vec2G<T> operator+ (Vec2G<T> a);
+	Vec2G<T> operator- (Vec2G<T> a);
+	Vec2G<T> operator* (T a);
+	Vec2G<T> operator/ (T a);
 };
 
-//2D-Vector with ints
-typedef sf::Vector2i Vec2i;
+typedef Vec2G<double> Vec2;
 
 // Generate a new Color object with grayscale input with full opacity
 Col color(uint8_t gray);
