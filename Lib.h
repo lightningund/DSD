@@ -3,27 +3,42 @@
 #include <SFML/Graphics.hpp>
 #include <bitset>
 
-typedef sf::CircleShape Circle;
-typedef sf::RectangleShape Rect;
-typedef sf::RenderWindow RWind;
-typedef sf::Window Wind;
-typedef sf::Keyboard KB;
-typedef sf::Mouse M;
+#include <iostream>
 
-typedef unsigned long long EntityID;
-typedef uint8_t ComponentID;
+using Circle = sf::CircleShape;
+using Rect = sf::RectangleShape;
+using RWind = sf::RenderWindow;
+using Wind = sf::Window;
+using KB = sf::Keyboard;
+using M = sf::Mouse;
+
+using EntityID = unsigned long long;
+using ComponentID = uint8_t;
 
 // This is 2^64-1, we are not going to make component pools that big
 //constexpr EntityID MAX_ENTITIES = (1 << (sizeof(EntityID) * 8)) - 1;
 constexpr EntityID MAX_ENTITIES = 10000;
 constexpr ComponentID MAX_COMPONENTS = (1 << (sizeof(ComponentID) * 8)) - 1;
-typedef std::bitset<MAX_COMPONENTS> ComponentMask;
+using ComponentMask = std::bitset<MAX_COMPONENTS>;
 
-ComponentID component_counter {0};
+extern ComponentID component_counter;
 template <typename T>
 ComponentID get_component_id() {
-	static ComponentID component_id = component_counter ++;
+	static ComponentID component_id = component_counter++;
 	return component_id;
+}
+
+template<typename... ComponentTypes>
+ComponentMask create_mask() {
+	ComponentMask mask;
+	// Unpack the template parameters into an initializer list
+	int component_ids[] = {get_component_id<ComponentTypes>()...};
+
+	for (int i = 0; i < sizeof...(ComponentTypes); i ++) {
+		mask.set(component_ids[i]);
+	}
+
+	return mask;
 }
 
 //Color
@@ -40,14 +55,49 @@ struct Vec2G {
 	T x{};
 	T y{};
 
-	void operator+= (Vec2G<T> a);
-	void operator-= (Vec2G<T> a);
-	void operator*= (T a);
-	void operator/= (T a);
-	Vec2G<T> operator+ (Vec2G<T> a);
-	Vec2G<T> operator- (Vec2G<T> a);
-	Vec2G<T> operator* (T a);
-	Vec2G<T> operator/ (T a);
+	bool operator== (const Vec2G<T> a) const {
+		return x == a.x && y == a.y;
+	}
+
+	bool operator!= (const Vec2G<T> a) const {
+		return !(a == this);
+	}
+
+	void operator+= (const Vec2G<T> a) {
+		x += a.x;
+		y += a.y;
+	}
+
+	void operator-= (const Vec2G<T> a) {
+		x -= a.x;
+		y -= a.y;
+	}
+
+	void operator*= (const T a) {
+		x *= a;
+		y *= a;
+	}
+
+	void operator/= (const T a) {
+		x /= a;
+		y /= a;
+	}
+
+	Vec2G<T> operator+ (const Vec2G<T> a) const {
+		return Vec2G<T>{x + a.x, y + a.y};
+	}
+
+	Vec2G<T> operator- (const Vec2G<T> a) const {
+		return Vec2G<T>{x - a.x, y - a.y};
+	}
+
+	Vec2G<T> operator* (const T a) const {
+		return Vec2G<T>{x * a, y * a};
+	}
+
+	Vec2G<T> operator/ (const T a) const {
+		return Vec2G<T>{x / a, y / a};
+	}
 };
 
 typedef Vec2G<double> Vec2;
@@ -93,6 +143,13 @@ sf::Color col_to_sf_color(Col col);
 
 // Convert from Vec2 to sf::Vector2f
 sf::Vector2f vec2_to_sf_vec2f(Vec2 vec);
+
+bool mask_check(ComponentMask subject, ComponentMask goal);
+
+//template <typename ...Ts>
+//void log(Ts... dat) {
+//	
+//}
 
 constexpr Col BLACK{0, 0, 0, 255};
 constexpr Col GREY{128, 128, 128, 255};

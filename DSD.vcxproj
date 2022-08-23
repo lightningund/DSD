@@ -91,12 +91,14 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lib.cpp" />
+    <ClCompile Include="SceneView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComponentPool.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Lib.h" />
+    <ClInclude Include="SceneView.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

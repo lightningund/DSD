@@ -9,6 +9,6 @@ ComponentPool::~ComponentPool() {
 	delete data;
 }
 
-char* ComponentPool::get(EntityID index) {
+void* ComponentPool::get(EntityID index) {
 	return data + (index * element_size);
 }

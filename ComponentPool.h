@@ -2,12 +2,11 @@
 #include "Lib.h"
 
 struct ComponentPool {
+	char* data{nullptr};
+	size_t element_size{};
+
 	ComponentPool(size_t element_size);
 	~ComponentPool();
 
-	char* get(EntityID index);
-
-	char* data{nullptr};
-	size_t element_size{};
+	void* get(EntityID index);
 };
-
