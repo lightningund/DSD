@@ -22,12 +22,15 @@ constexpr ComponentID MAX_COMPONENTS = (1 << (sizeof(ComponentID) * 8)) - 1;
 using ComponentMask = std::bitset<MAX_COMPONENTS>;
 
 extern ComponentID component_counter;
+
+// Get the unique ID of a component type
 template <typename T>
 ComponentID get_component_id() {
 	static ComponentID component_id = component_counter++;
 	return component_id;
 }
 
+// Create a component mask from a list of types
 template<typename... ComponentTypes>
 ComponentMask create_mask() {
 	ComponentMask mask;
@@ -60,7 +63,7 @@ struct Vec2G {
 	}
 
 	bool operator!= (const Vec2G<T> a) const {
-		return !(a == this);
+		return x != a.x || y != a.y;
 	}
 
 	void operator+= (const Vec2G<T> a) {
@@ -145,11 +148,6 @@ sf::Color col_to_sf_color(Col col);
 sf::Vector2f vec2_to_sf_vec2f(Vec2 vec);
 
 bool mask_check(ComponentMask subject, ComponentMask goal);
-
-//template <typename ...Ts>
-//void log(Ts... dat) {
-//	
-//}
 
 constexpr Col BLACK{0, 0, 0, 255};
 constexpr Col GREY{128, 128, 128, 255};

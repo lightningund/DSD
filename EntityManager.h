@@ -4,6 +4,7 @@
 #include "ComponentPool.h"
 
 struct EntityManager {
+	// A descriptor of an entity with an ID and a mask of applicable components
 	struct EntityDesc {
 		EntityID id;
 		ComponentMask mask;

@@ -33,6 +33,7 @@ int main() {
 	player_hbox->pos = Vec2{100, 100};
 	player_hbox->size = Vec2{50, 50};
 	player_health->health = 100;
+	player_health->max_health = 100;
 	player_spriteset->texture.loadFromFile("res/sprites/player.png");
 	player_spriteset->sprite.setTexture(player_spriteset->texture);
 
@@ -42,13 +43,25 @@ int main() {
 	EntityID sign = manager.create_entity();
 	Hitbox* sign_hbox = manager.assign_component<Hitbox>(sign);
 	SpriteSet* sign_spriteset = manager.assign_component<SpriteSet>(sign);
-	manager.assign_component<Health>(sign);
+	Health* sign_health = manager.assign_component<Health>(sign);
 	manager.assign_component<Sign>(sign);
 
 	sign_hbox->pos = Vec2{200, 100};
 	sign_hbox->size = Vec2{50, 50};
+	sign_health->health = 100;
+	sign_health->max_health = 100;
 	sign_spriteset->texture.loadFromFile("res/sprites/sign.png");
 	sign_spriteset->sprite.setTexture(sign_spriteset->texture);
+
+	EntityID sign2 = manager.create_entity();
+	Hitbox* sign2_hbox = manager.assign_component<Hitbox>(sign2);
+	SpriteSet* sign2_spriteset = manager.assign_component<SpriteSet>(sign2);
+	manager.assign_component<Sign>(sign2);
+
+	sign2_hbox->pos = Vec2{300, 100};
+	sign2_hbox->size = Vec2{50, 50};
+	sign2_spriteset->texture.loadFromFile("res/sprites/sign.png");
+	sign2_spriteset->sprite.setTexture(sign2_spriteset->texture);
 
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Deep Sea Death");
 	
@@ -78,9 +91,14 @@ int main() {
 	return 0;
 }
 
-void move_entity(double dx, double dy, EntityID player_id, EntityManager& manager) {
-	Hitbox* hbox = manager.get_component<Hitbox>(player_id);
-	hbox->pos += Vec2{dx, dy};
+void move_entity(Vec2 movement, EntityID entity, EntityManager& manager) {
+	Hitbox* hbox = manager.get_component<Hitbox>(entity);
+	hbox->pos += movement;
+}
+
+void damage_entity(double amnt, EntityID entity, EntityManager& manager) {
+	Health* health = manager.get_component<Health>(entity);
+	health->health -= amnt;
 }
 
 void update(sf::RenderWindow& wind, EntityManager& manager) {
@@ -92,22 +110,20 @@ void update(sf::RenderWindow& wind, EntityManager& manager) {
 	}
 
 	ComponentMask player_mask = create_mask<Player>();
-	for (EntityID entity : SceneView(manager, player_mask)) {
-		if (KB::isKeyPressed(KB::W)) {
-			move_entity(0, -1, entity, manager);
+	for (EntityID player : SceneView(manager, player_mask)) {
+		Vec2 movement{};
+		if (KB::isKeyPressed(KB::W)) movement += Vec2{0, -1};
+		if (KB::isKeyPressed(KB::A)) movement += Vec2{-1, 0};
+		if (KB::isKeyPressed(KB::S)) movement += Vec2{0, 1};
+		if (KB::isKeyPressed(KB::D)) movement += Vec2{1, 0};
+
+		if (movement != Vec2{0, 0}) {
+			move_entity(movement * 10, player, manager);
 		}
-		if (KB::isKeyPressed(KB::A)) {
-			move_entity(-1, 0, entity, manager);
+
+		if (M::isButtonPressed(M::Left)) {
+			damage_entity(1, player, manager);
 		}
-		if (KB::isKeyPressed(KB::S)) {
-			move_entity(0, 1, entity, manager);
-		}
-		if (KB::isKeyPressed(KB::D)) {
-			move_entity(1, 0, entity, manager);
-		}
-		/*if (M::isButtonPressed(M::Left)) {
-			player.shoot();
-		}*/
 	}
 	
 	if (KB::isKeyPressed(KB::Escape)) {
@@ -125,6 +141,26 @@ void render_objs(sf::RenderWindow& wind, EntityManager& manager) {
 		spriteset->sprite.setPosition(vec2_to_sf_vec2f(hbox->pos));
 		spriteset->sprite.setScale(vec2_to_sf_vec2f(hbox->size / 32.0));
 		wind.draw(spriteset->sprite);
+	}
+
+	ComponentMask healthbar_mask = create_mask<Health>() | renderable_mask;
+	for (EntityID entity : SceneView(manager, healthbar_mask)) {
+		constexpr auto healthbar_height = 20;
+		constexpr auto healthbar_trim = 2;
+
+		Hitbox* hbox = manager.get_component<Hitbox>(entity);
+		Health* health = manager.get_component<Health>(entity);
+		double health_percent = health->health / health->max_health;
+
+		Rect bar_bg{{float(hbox->size.x), float(healthbar_height)}};
+		bar_bg.setPosition(float(hbox->pos.x), float(hbox->pos.y + hbox->size.y));
+		bar_bg.setFillColor(col_to_sf_color(GREY));
+		Rect bar{bar_bg};
+		bar.move(healthbar_trim, healthbar_trim);
+		bar.setSize({float((hbox->size.x - healthbar_trim * 2) * health_percent), float(healthbar_height - healthbar_trim * 2)});
+		bar.setFillColor(col_to_sf_color(RED));
+		wind.draw(bar_bg);
+		wind.draw(bar);
 	}
 	wind.display();
 }
