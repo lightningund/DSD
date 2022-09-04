@@ -52,7 +52,7 @@ struct EntityManager {
 
 		// If the entity does not "have" the selected component return null
 		if (!entities[entity].mask.test(component_id)) return nullptr;
-
+		
 		// Get a pointer to the location in memory of the component,
 		// that being inside of the component pool for type T and at the index of the entity
 		// Then explicitly cast it to a pointer of type T and return it

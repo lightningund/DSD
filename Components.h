@@ -30,12 +30,24 @@ namespace Components {
 
 	typedef struct Weapon {
 		double dmg{};
+	} Weapon;
+
+	typedef struct Gun : public Weapon {
 		double fire_rate{};
 		int ammo_reserve_max{};
 		int ammo_reserve{};
 		int magazine_max{};
 		int magazine{};
-	} Weapon;
+	} Gun;
+
+	typedef struct Primary : public Gun {} Primary;
+
+	typedef struct Secondary : public Gun {} Secondary;
+
+	typedef struct Melee : public Weapon {
+		double attack_speed{};
+		double range{};
+	} Melee;
 
 	// It's a sprite "set" because it needs both a sprite and a texture
 	typedef struct SpriteSet {
@@ -43,6 +55,16 @@ namespace Components {
 		sf::Sprite sprite{};
 	} SpriteSet;
 
-	// For marking an entity as the player, contains no data, essentially just a flag
-	typedef struct Player {} Player;
+	// For marking an entity as the player, contains a pointer to the current weapon
+	typedef struct Player {
+		Weapon* curr_wep;
+	} Player;
+
+	typedef struct AmmoDisplay {
+		Weapon* target;
+	} AmmoDisplay;
+
+	typedef struct HealthDisplay {
+		Health* target;
+	} HealthDisplay;
 }

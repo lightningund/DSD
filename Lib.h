@@ -103,7 +103,13 @@ struct Vec2G {
 	}
 };
 
-typedef Vec2G<double> Vec2;
+template <typename T>
+std::ostream& operator<<(std::ostream& stream, Vec2G<T> vec) {
+	stream << vec.x << ", " << vec.y;
+	return stream;
+}
+
+using Vec2 = Vec2G<double>;
 
 // Generate a new Color object with grayscale input with full opacity
 Col color(uint8_t gray);
