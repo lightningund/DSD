@@ -3,20 +3,15 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lib.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Weapon.cpp" />
-    <ClCompile Include="Damageable.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Hitbox.cpp" />
-    <ClCompile Include="Sign.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="ComponentPool.cpp" />
+    <ClCompile Include="SceneView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Weapon.h" />
-    <ClInclude Include="Damageable.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="Hitbox.h" />
-    <ClInclude Include="Sign.h" />
+    <ClInclude Include="Components.h" />
+    <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="ComponentPool.h" />
+    <ClInclude Include="SceneView.h" />
   </ItemGroup>
 </Project>
