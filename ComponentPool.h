@@ -8,9 +8,9 @@ struct ComponentPool {
 	// How big each element is
 	size_t element_size{};
 
-	ComponentPool(size_t element_size);
+	ComponentPool(const size_t element_size);
 	~ComponentPool();
 
 	// Get a pointer to the location in memory corresponding to the specified ID
-	void* get(EntityID index);
+	void* get(const EntityID index) const;
 };

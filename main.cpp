@@ -115,12 +115,12 @@ int main() {
 	return 0;
 }
 
-void move_entity(Vec2 movement, EntityID entity, EntityManager& manager) {
+void move_entity(const Vec2 movement, const EntityID entity, const EntityManager& manager) {
 	auto hbox = manager.get_component<Hitbox>(entity);
 	hbox->pos += movement;
 }
 
-void damage_entity(double amnt, EntityID entity, EntityManager& manager) {
+void damage_entity(const double amnt, const EntityID entity, const EntityManager& manager) {
 	auto health = manager.get_component<Health>(entity);
 	health->health -= amnt;
 }
@@ -167,7 +167,7 @@ void draw_sprites(sf::RenderWindow& wind, EntityManager& manager) {
 	}
 }
 
-void draw_healthbar(sf::RenderWindow& wind, double health_percent, double x, double y, double width, double height) {
+void draw_healthbar(sf::RenderWindow& wind, const double health_percent, const double x, const double y, const double width, const double height) {
 	float trim = float(height) * 0.1f;
 	Rect bar_bg{{float(width), float(height)}};
 	bar_bg.setPosition(float(x), float(y));

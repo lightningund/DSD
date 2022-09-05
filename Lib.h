@@ -50,6 +50,26 @@ typedef struct Col {
 	uint8_t g;
 	uint8_t b;
 	uint8_t a;
+	
+	// Generate a new Color object with grayscale input with full opacity
+	constexpr Col(uint8_t gray)
+		: Col{gray, gray, gray, 255} {}
+
+	// Generate a new Color object with grayscale and alpha input
+	constexpr Col(uint8_t gray, uint8_t alpha)
+		: Col{gray, gray, gray, alpha} {}
+
+	// Generate a new Color object with red, green, and blue inputs and full opacity
+	constexpr Col(uint8_t red, uint8_t green, uint8_t blue)
+		: Col{red, green, blue, 255} {}
+
+	// Generate a new Color object with red, green, blue, and alpha inputs, all in one number
+	constexpr Col(uint32_t val)
+		: Col{val >> 24, (val >> 16) & 0xFF, (val >> 8) & 0xFF, val & 0xFF} {}
+
+	// Generate a new Color object with red, green, blue, and alpha inputs
+	constexpr Col(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+		: r{red}, g{green}, b{blue}, a{alpha} {}
 } Col;
 
 //2D-Vector
@@ -104,7 +124,7 @@ struct Vec2G {
 };
 
 template <typename T>
-std::ostream& operator<<(std::ostream& stream, Vec2G<T> vec) {
+std::ostream& operator<<(std::ostream& stream, const Vec2G<T> vec) {
 	stream << vec.x << ", " << vec.y;
 	return stream;
 }
@@ -112,53 +132,53 @@ std::ostream& operator<<(std::ostream& stream, Vec2G<T> vec) {
 using Vec2 = Vec2G<double>;
 
 // Generate a new Color object with grayscale input with full opacity
-Col color(uint8_t gray);
+Col color(const uint8_t gray);
 
 // Generate a new Color object with grayscale and alpha input
-Col color(uint8_t gray, uint8_t alpha);
+Col color(const uint8_t gray, const uint8_t alpha);
 
 // Generate a new Color object with red, green, and blue inputs and full opacity
-Col color(uint8_t red, uint8_t green, uint8_t blue);
+Col color(const uint8_t red, const uint8_t green, const uint8_t blue);
 
 // Generate a new Color object with red, green, blue, and alpha inputs
-Col color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
+Col color(const uint8_t red, const uint8_t green, const uint8_t blue, const uint8_t alpha);
 
 // Generate a new Color object with red, green, blue, and alpha inputs, all in one number
-Col color(uint32_t val);
+Col color(const uint32_t val);
 
 //Limit a number
-double limitVal(double limitee, double limit);
+double limitVal(const double limitee, const double limit);
 
 //Limit a number with different upper and lower bounds
-double limitVal(double limitee, double upper_lim, double lower_lim);
+double limitVal(const double limitee, const double upper_lim, const double lower_lim);
 
 //Check if a number is outside of bounds
-bool isLimited(double limitee, double limit);
+bool isLimited(const double limitee, const double limit);
 
 //Check if a number is outside of different upper and lower bounds
-bool isLimited(double limitee, double upper_lim, double lower_lim);
+bool isLimited(const double limitee, const double upper_lim, const double lower_lim);
 
 //Check if 2 squares overlap
-bool overlap(double ax, double ay, double aw, double ah, double bx, double by, double bw, double bh);
+bool overlap(const double ax, const double ay, const double aw, const double ah, const double bx, const double by, const double bw, const double bh);
 
 //Find the angle of a vector
-double getAngle(Vec2);
+double getAngle(const Vec2);
 
 // Convert an input in radians into degrees
-double radiansToDegrees(double radians);
+double radiansToDegrees(const double radians);
 
 // Convert from Col to sf::Color
-sf::Color col_to_sf_color(Col col);
+sf::Color col_to_sf_color(const Col col);
 
 // Convert from Vec2 to sf::Vector2f
-sf::Vector2f vec2_to_sf_vec2f(Vec2 vec);
+sf::Vector2f vec2_to_sf_vec2f(const Vec2 vec);
 
-bool mask_check(ComponentMask subject, ComponentMask goal);
+bool mask_check(const ComponentMask subject, const ComponentMask goal);
 
-std::string operator+(std::string str, int num);
-std::string operator+(std::string str, double num);
-std::string operator+(int num, std::string str);
-std::string operator+(double num, std::string str);
+std::string operator+(const std::string str, const int num);
+std::string operator+(const std::string str, const double num);
+std::string operator+(const int num, const std::string str);
+std::string operator+(const double num, const std::string str);
 
 constexpr Col BLACK{0, 0, 0, 255};
 constexpr Col GREY{128, 128, 128, 255};

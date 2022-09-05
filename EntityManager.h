@@ -42,12 +42,12 @@ struct EntityManager {
 
 	// Remove a component of type T from an entity
 	template <typename T>
-	void remove_component(EntityID entity) {
+	void remove_component(const EntityID entity) {
 		entities[entity].mask.reset(get_component_id<T>());
 	}
 
 	template <typename T>
-	T* get_component(EntityID entity) {
+	T* get_component(const EntityID entity) const {
 		ComponentID component_id = get_component_id<T>();
 
 		// If the entity does not "have" the selected component return null
