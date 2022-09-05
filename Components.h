@@ -61,7 +61,7 @@ namespace Components {
 	} Player;
 
 	typedef struct AmmoDisplay {
-		Weapon* target;
+		Gun* target;
 	} AmmoDisplay;
 
 	typedef struct HealthDisplay {

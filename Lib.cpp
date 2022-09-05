@@ -73,3 +73,19 @@ sf::Vector2f vec2_to_sf_vec2f(Vec2 vec) {
 bool mask_check(ComponentMask subject, ComponentMask goal) {
 	return (subject & goal) == goal;
 }
+
+std::string operator+(std::string str, int num) {
+	return str + std::to_string(num);
+}
+
+std::string operator+(std::string str, double num) {
+	return str + std::to_string(num);
+}
+
+std::string operator+(int num, std::string str) {
+	return std::to_string(num) + str;
+}
+
+std::string operator+(double num, std::string str) {
+	return std::to_string(num) + str;
+}

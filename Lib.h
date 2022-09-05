@@ -155,6 +155,11 @@ sf::Vector2f vec2_to_sf_vec2f(Vec2 vec);
 
 bool mask_check(ComponentMask subject, ComponentMask goal);
 
+std::string operator+(std::string str, int num);
+std::string operator+(std::string str, double num);
+std::string operator+(int num, std::string str);
+std::string operator+(double num, std::string str);
+
 constexpr Col BLACK{0, 0, 0, 255};
 constexpr Col GREY{128, 128, 128, 255};
 constexpr Col WHITE{255, 255, 255, 255};

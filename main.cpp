@@ -13,18 +13,21 @@ struct test {};
 
 using namespace Components;
 
+sf::Font font{};
+
 // Nothing in here has any comments because it is in constant flux
 int main() {
-	constexpr auto WIDTH = 800;
-	constexpr auto HEIGHT = 800;
-	constexpr auto STAT_UPDATE_RATE = 0.5;
+	font.loadFromFile("res/UbuntuMono-Regular.ttf");
+	constexpr auto WIDTH{800};
+	constexpr auto HEIGHT{800};
+	constexpr auto STAT_UPDATE_RATE{0.5};
 
-	int frame_counter = 0;
-	sf::Int64 frame_time_counter = 0;
+	int frame_counter{0};
+	sf::Int64 frame_time_counter{0};
 
-	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Deep Sea Death");
+	sf::RenderWindow window{sf::VideoMode(WIDTH, HEIGHT), "Deep Sea Death"};
 
-	sf::Clock clk;
+	sf::Clock clk{};
 
 	EntityManager manager{};
 	
@@ -62,7 +65,7 @@ int main() {
 	player_player->curr_wep = player_primary;
 	player_spriteset->texture.loadFromFile("res/sprites/player.png");
 	player_spriteset->sprite.setTexture(player_spriteset->texture);
-	player_ammo_disp->target = player_player->curr_wep;
+	player_ammo_disp->target = (Gun*)player_player->curr_wep;
 	player_health_disp->target = player_health;
 
 	EntityID sign = manager.create_entity();
@@ -202,9 +205,25 @@ void draw_ui(sf::RenderWindow& wind, EntityManager& manager) {
 		auto healthbar_y = healthbar_padding;
 
 		auto health = disp->target;
-		double health_percent = health->health / health->max_health;
+		auto health_percent = health->health / health->max_health;
 
 		draw_healthbar(wind, health_percent, healthbar_x, healthbar_y, healthbar_width, healthbar_height);
+	}
+
+	ComponentMask ammo_disp_mask = create_mask<AmmoDisplay>();
+	for (EntityID entity : SceneView(manager, health_disp_mask)) {
+		auto disp = manager.get_component<AmmoDisplay>(entity);
+		auto wep = disp->target;
+
+		if (wep != nullptr) {
+			sf::Text text;
+			text.setFont(font);
+			text.setPosition(wind.getSize().x * 0.8f, wind.getSize().y * 0.9f);
+			text.setString(wep->magazine + std::string("/") + wep->magazine_max);
+			text.setCharacterSize(24);
+			text.setFillColor(col_to_sf_color(WHITE));
+			wind.draw(text);
+		}
 	}
 }
 
