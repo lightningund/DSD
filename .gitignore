@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+/notes.txt
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -97,6 +98,11 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.user
+*.vcxproj
+*.filters
+*.sln
+*.vcxproj.xml
 
 # Chutzpah Test files
 _Chutzpah*
@@ -361,4 +367,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/notes.txt
