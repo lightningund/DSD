@@ -23,25 +23,25 @@ Col color(const uint32_t val) {
 	return col;
 }
 
-double limitVal(const double limitee, const double limit) {
+double limit_val(const double limitee, const double limit) {
 	if (limitee > limit) return limit;
 	else if (limitee < -limit) return -limit;
 
 	return limitee;
 }
 
-double limitVal(const double limitee, const double upper_lim, const double lower_lim) {
+double limit_val(const double limitee, const double upper_lim, const double lower_lim) {
 	if (limitee > upper_lim) return upper_lim;
 	else if (limitee < lower_lim) return lower_lim;
 
 	return limitee;
 }
 
-bool isLimited(const double limitee, const double limit) {
+bool is_limited(const double limitee, const double limit) {
 	return (limitee < -limit || limitee > limit);
 }
 
-bool isLimited(const double limitee, const double upper_lim, const double lowerLim) {
+bool is_limited(const double limitee, const double upper_lim, const double lowerLim) {
 	return (limitee < lowerLim || limitee > upper_lim);
 }
 
@@ -49,11 +49,19 @@ bool overlap(const double ax, const double ay, const double aw, const double ah,
 	return((ax + aw > bx && ax < bx + bw) && (ay + ah > by && ay < by + bh));
 }
 
-double getAngle(const Vec2 vec) {
+double get_angle(const Vec2 vec) {
 	return atan2f(float(vec.x), float(vec.y));
 }
 
-double radiansToDegrees(const double radians) {
+double get_slope(const Vec2 vec) {
+	return vec.y / vec.x;
+}
+
+Vec2 vec_from_angle(const double angle) {
+	return Vec2{sin(angle), cos(angle)};
+}
+
+double radians_to_degrees(const double radians) {
 	return radians * 360 / 6.28;
 }
 

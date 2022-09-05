@@ -7,9 +7,7 @@
 #include "EntityManager.h"
 
 void update(sf::RenderWindow& wind, EntityManager& manager);
-void render_objs(sf::RenderWindow& wind, EntityManager& manager);
-
-struct test {};
+void render(sf::RenderWindow& wind, EntityManager& manager);
 
 using namespace Components;
 
@@ -52,20 +50,23 @@ int main() {
 	player_primary->magazine_max = 20;
 	player_primary->magazine = 20;
 	player_primary->dmg = 5;
-	player_primary->fire_rate = 1.0;
+	player_primary->fire_rate = 5.0;
+	player_primary->reload_time = 2.0;
 	player_secondary->ammo_reserve_max = 100;
 	player_secondary->ammo_reserve = 100;
 	player_secondary->magazine_max = 10;
 	player_secondary->magazine = 10;
 	player_secondary->dmg = 5;
 	player_secondary->fire_rate = 0.5;
+	player_secondary->reload_time = 1.0;
 	player_melee->attack_speed = 1.2;
 	player_melee->dmg = 20;
 	player_melee->range = 2;
 	player_player->curr_wep = player_primary;
+	player_player->curr_type = PRIMARY;
 	player_spriteset->texture.loadFromFile("res/sprites/player.png");
 	player_spriteset->sprite.setTexture(player_spriteset->texture);
-	player_ammo_disp->target = (Gun*)player_player->curr_wep;
+	player_ammo_disp->target = player_player;
 	player_health_disp->target = player_health;
 
 	EntityID sign = manager.create_entity();
@@ -106,9 +107,13 @@ int main() {
 			}
 			clk.restart();
 
+			window.clear();
+
 			update(window, manager);
 
-			render_objs(window, manager);
+			render(window, manager);
+
+			window.display();
 		}
 	}
 
@@ -125,16 +130,95 @@ void damage_entity(const double amnt, const EntityID entity, const EntityManager
 	health->health -= amnt;
 }
 
+//EntityID find_shot_intersection(const Vec2 start_pos, const double angle, EntityManager& manager) {
+//	ComponentMask health_mask = create_mask<Health>();
+//	for (EntityID entity : SceneView(manager, health_mask)) {
+//
+//	}
+//	return 0;
+//}
+
+void player_reload(Player* player) {
+	if (player->curr_type == MELEE) return;
+
+	Gun* wep = (Gun*)player->curr_wep;
+	if (wep->reloading) return;
+	if (wep->magazine == wep->magazine_max) return;
+
+	std::cout << "Player Reloading!\n";
+
+	wep->reloading = true;
+	wep->reload_clock.restart();
+}
+
+void player_check_finished_reloading(Player* player) {
+	if (player->curr_type == MELEE) return;
+
+	Gun* wep = (Gun*)player->curr_wep;
+	if (!wep->reloading) return;
+
+	if (wep->reload_clock.getElapsedTime().asMicroseconds() > 1000000 * wep->reload_time) {
+		std::cout << "Player Finished Reloading!\n";
+
+		wep->reloading = false;
+		int bullets_refilled = min(std::vector<int>{wep->magazine_max - wep->magazine, wep->ammo_reserve});
+		wep->ammo_reserve -= bullets_refilled;
+		wep->magazine += bullets_refilled;
+	};
+}
+
+void shoot(const EntityID player, sf::RenderWindow& wind, EntityManager& manager) {
+	auto player_player = manager.get_component<Player>(player);
+	if(player_player->curr_type == MELEE) return;
+
+	Gun* wep = (Gun*)player_player->curr_wep;
+
+	if (wep->reloading) return;
+
+	if (wep->fire_clock.getElapsedTime().asMicroseconds() >= 1000000 / wep->fire_rate) {
+		wep->fire_clock.restart();
+
+		if (wep->magazine > 0) {
+			wep->magazine --;
+			auto player_hbox = manager.get_component<Hitbox>(player);
+
+			Vec2 line_start = player_hbox->pos + player_hbox->size / 2;
+
+			sf::VertexArray line{sf::Lines, 2};
+			line[0].position = vec2_to_sf_vec2f(line_start);
+			line[1].position = vec2_to_sf_vec2f(line_start + player_player->target_dir.set_length(1000));
+
+			line[0].color = col_to_sf_color(WHITE);
+			line[1].color = col_to_sf_color(WHITE);
+
+			wind.draw(line);
+		} else {
+			player_reload(player_player);
+		}
+	}
+}
+
 void update(sf::RenderWindow& wind, EntityManager& manager) {
 	sf::Event event;
 	while (wind.pollEvent(event)) {
-		if (event.type == sf::Event::Closed) {
-			wind.close();
-		}
+		if (event.type == sf::Event::Closed) wind.close();
+		/*else if (event.type == sf::Event::MouseWheelMoved) {
+			std::cout << event.mouseWheel.delta << "\n";
+		}*/
 	}
+
+	Vec2 mouse_pos{M::getPosition(wind)};
 
 	ComponentMask player_mask = create_mask<Player>();
 	for (EntityID player : SceneView(manager, player_mask)) {
+		auto player_player = manager.get_component<Player>(player);
+		auto player_hbox = manager.get_component<Hitbox>(player);
+		player_player->target_dir = mouse_pos - (player_hbox->pos + player_hbox->size / 2);
+
+		player_check_finished_reloading(player_player);
+
+		if(KB::isKeyPressed(KB::R)) player_reload(player_player);
+
 		Vec2 movement{};
 		if (KB::isKeyPressed(KB::W)) movement += Vec2{0, -1};
 		if (KB::isKeyPressed(KB::A)) movement += Vec2{-1, 0};
@@ -146,7 +230,8 @@ void update(sf::RenderWindow& wind, EntityManager& manager) {
 		}
 
 		if (M::isButtonPressed(M::Left)) {
-			damage_entity(1, player, manager);
+			//damage_entity(1, player, manager);
+			shoot(player, wind, manager);
 		}
 	}
 	
@@ -167,6 +252,7 @@ void draw_sprites(sf::RenderWindow& wind, EntityManager& manager) {
 	}
 }
 
+// Draw a single healthbar
 void draw_healthbar(sf::RenderWindow& wind, const double health_percent, const double x, const double y, const double width, const double height) {
 	float trim = float(height) * 0.1f;
 	Rect bar_bg{{float(width), float(height)}};
@@ -180,6 +266,7 @@ void draw_healthbar(sf::RenderWindow& wind, const double health_percent, const d
 	wind.draw(bar);
 }
 
+// Draw healthbars of all entities
 void draw_healthbars(sf::RenderWindow& wind, EntityManager& manager) {
 	ComponentMask healthbar_mask = create_mask<Health>();
 	for (EntityID entity : SceneView(manager, healthbar_mask)) {
@@ -193,7 +280,9 @@ void draw_healthbars(sf::RenderWindow& wind, EntityManager& manager) {
 	}
 }
 
+// Draw all the UI elements
 void draw_ui(sf::RenderWindow& wind, EntityManager& manager) {
+	// The healthbar
 	ComponentMask health_disp_mask = create_mask<HealthDisplay>();
 	for (EntityID entity : SceneView(manager, health_disp_mask)) {
 		auto disp = manager.get_component<HealthDisplay>(entity);
@@ -210,16 +299,18 @@ void draw_ui(sf::RenderWindow& wind, EntityManager& manager) {
 		draw_healthbar(wind, health_percent, healthbar_x, healthbar_y, healthbar_width, healthbar_height);
 	}
 
+	// The ammo counter
 	ComponentMask ammo_disp_mask = create_mask<AmmoDisplay>();
 	for (EntityID entity : SceneView(manager, health_disp_mask)) {
 		auto disp = manager.get_component<AmmoDisplay>(entity);
-		auto wep = disp->target;
+		auto player = disp->target;
 
-		if (wep != nullptr) {
+		if (player->curr_type != MELEE) {
+			Gun* wep = (Gun*)player->curr_wep;
 			sf::Text text;
 			text.setFont(font);
 			text.setPosition(wind.getSize().x * 0.8f, wind.getSize().y * 0.9f);
-			text.setString(wep->magazine + std::string("/") + wep->magazine_max);
+			text.setString(wep->magazine + std::string("/") + wep->ammo_reserve);
 			text.setCharacterSize(24);
 			text.setFillColor(col_to_sf_color(WHITE));
 			wind.draw(text);
@@ -227,12 +318,8 @@ void draw_ui(sf::RenderWindow& wind, EntityManager& manager) {
 	}
 }
 
-void render_objs(sf::RenderWindow& wind, EntityManager& manager) {
-	wind.clear();
-
+void render(sf::RenderWindow& wind, EntityManager& manager) {
 	draw_sprites(wind, manager);
 	draw_healthbars(wind, manager);
 	draw_ui(wind, manager);
-
-	wind.display();
 }

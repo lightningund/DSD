@@ -33,11 +33,16 @@ namespace Components {
 	} Weapon;
 
 	typedef struct Gun : public Weapon {
+		sf::Clock fire_clock{};
+		sf::Clock reload_clock{};
 		double fire_rate{};
+		double reload_time{};
 		int ammo_reserve_max{};
 		int ammo_reserve{};
 		int magazine_max{};
 		int magazine{};
+
+		bool reloading{false};
 	} Gun;
 
 	typedef struct Primary : public Gun {} Primary;
@@ -57,14 +62,16 @@ namespace Components {
 
 	// For marking an entity as the player, contains a pointer to the current weapon
 	typedef struct Player {
-		Weapon* curr_wep;
+		Vec2 target_dir{};
+		WeaponType curr_type{};
+		Weapon* curr_wep{};
 	} Player;
 
 	typedef struct AmmoDisplay {
-		Gun* target;
+		Player* target{};
 	} AmmoDisplay;
 
 	typedef struct HealthDisplay {
-		Health* target;
+		Health* target{};
 	} HealthDisplay;
 }
