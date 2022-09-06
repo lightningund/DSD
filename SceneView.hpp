@@ -1,6 +1,6 @@
 #pragma once
-#include "Lib.h"
-#include "EntityManager.h"
+#include "Lib.hpp"
+#include "EntityManager.hpp"
 
 struct SceneView {
 	struct Iterator {

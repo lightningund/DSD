@@ -1,4 +1,4 @@
-#include "SceneView.h"
+#include "SceneView.hpp"
 
 SceneView::Iterator::Iterator(EntityManager* manager, EntityID index, ComponentMask mask, bool all)
 	: manager{manager}, index{index}, mask{mask}, all{all} {}

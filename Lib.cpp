@@ -1,4 +1,4 @@
-#include "Lib.h"
+#include "Lib.hpp"
 
 ComponentID component_counter{0};
 

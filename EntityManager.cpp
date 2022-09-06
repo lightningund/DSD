@@ -1,4 +1,4 @@
-#include "EntityManager.h"
+#include "EntityManager.hpp"
 
 EntityID EntityManager::create_entity() {
 	// Create and add a new entity with an empty mask and an ID of the current number of entities

@@ -1,4 +1,4 @@
-#include "ComponentPool.h"
+#include "ComponentPool.hpp"
 
 ComponentPool::ComponentPool(const size_t element_size) {
 	this->element_size = element_size;

@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "Lib.h"
-#include "SceneView.h"
-#include "Components.h"
-#include "EntityManager.h"
+#include "Lib.hpp"
+#include "SceneView.hpp"
+#include "Components.hpp"
+#include "EntityManager.hpp"
 
 constexpr Vec2 INV_VEC = Vec2{INFINITY, INFINITY};
 
@@ -34,10 +34,10 @@ int main() {
 	EntityID player = manager.create_entity();
 	auto player_hbox = manager.assign_component<Hitbox>(player);
 	auto player_health = manager.assign_component<Health>(player);
+	auto player_player = manager.assign_component<Player>(player);
 	auto player_primary = manager.assign_component<Primary>(player);
 	auto player_secondary = manager.assign_component<Secondary>(player);
 	auto player_melee = manager.assign_component<Melee>(player);
-	auto player_player = manager.assign_component<Player>(player);
 	auto player_spriteset = manager.assign_component<SpriteSet>(player);
 	auto player_ammo_disp = manager.assign_component<AmmoDisplay>(player);
 	auto player_health_disp = manager.assign_component<HealthDisplay>(player);
@@ -47,29 +47,35 @@ int main() {
 	player_hbox->size = Vec2{50, 50};
 	player_health->health = 100;
 	player_health->max_health = 100;
+	player_spriteset->texture.loadFromFile("res/sprites/player.png");
+	player_spriteset->sprite.setTexture(player_spriteset->texture);
+	player_ammo_disp->target = player_player;
+	player_health_disp->target = player_health;
+
 	player_primary->ammo_reserve_max = 200;
 	player_primary->ammo_reserve = 200;
 	player_primary->magazine_max = 20;
 	player_primary->magazine = 20;
 	player_primary->dmg = 5;
-	player_primary->fire_rate = 5.0;
+	player_primary->attack_speed = 5.0;
 	player_primary->reload_time = 2.0;
+	player_player->weapons.push_back(player_primary);
+	player_player->curr_wep = player_primary;
+	player_player->curr_type = PRIMARY;
+
 	player_secondary->ammo_reserve_max = 100;
 	player_secondary->ammo_reserve = 100;
 	player_secondary->magazine_max = 10;
 	player_secondary->magazine = 10;
 	player_secondary->dmg = 5;
-	player_secondary->fire_rate = 0.5;
+	player_secondary->attack_speed = 0.5;
 	player_secondary->reload_time = 1.0;
+	player_player->weapons.push_back(player_secondary);
+
 	player_melee->attack_speed = 1.2;
 	player_melee->dmg = 20;
 	player_melee->range = 2;
-	player_player->curr_wep = player_primary;
-	player_player->curr_type = PRIMARY;
-	player_spriteset->texture.loadFromFile("res/sprites/player.png");
-	player_spriteset->sprite.setTexture(player_spriteset->texture);
-	player_ammo_disp->target = player_player;
-	player_health_disp->target = player_health;
+	player_player->weapons.push_back(player_melee);
 
 	EntityID sign = manager.create_entity();
 	auto sign_hbox = manager.assign_component<Hitbox>(sign);
@@ -224,12 +230,12 @@ void shoot(const EntityID player, sf::RenderWindow& wind, EntityManager& manager
 	auto player_player = manager.get_component<Player>(player);
 	if(player_player->curr_type == MELEE) return;
 
-	Gun* wep = (Gun*)player_player->curr_wep;
+	Gun* wep = (Gun*)(player_player->curr_wep);
 
 	if (wep->reloading) return;
 
-	if (wep->fire_clock.getElapsedTime().asMicroseconds() >= 1000000 / wep->fire_rate) {
-		wep->fire_clock.restart();
+	if (wep->attack_clock.getElapsedTime().asMicroseconds() >= 1000000 / wep->attack_speed) {
+		wep->attack_clock.restart();
 
 		if (wep->magazine > 0) {
 			wep->magazine --;

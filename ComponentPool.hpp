@@ -1,5 +1,5 @@
 #pragma once
-#include "Lib.h"
+#include "Lib.hpp"
 
 struct ComponentPool {
 	// Just data

@@ -1,7 +1,7 @@
 #pragma once
-#include "Lib.h"
-#include "Components.h"
-#include "ComponentPool.h"
+#include "Lib.hpp"
+#include "Components.hpp"
+#include "ComponentPool.hpp"
 
 struct EntityManager {
 	// A descriptor of an entity with an ID and a mask of applicable components

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Lib.h"
+#include "Lib.hpp"
 
 namespace Components {
 	// Just a hitbox
@@ -29,13 +29,13 @@ namespace Components {
 	} Sign;
 
 	typedef struct Weapon {
+		sf::Clock attack_clock{};
+		double attack_speed{};
 		double dmg{};
 	} Weapon;
 
 	typedef struct Gun : public Weapon {
-		sf::Clock fire_clock{};
 		sf::Clock reload_clock{};
-		double fire_rate{};
 		double reload_time{};
 		int ammo_reserve_max{};
 		int ammo_reserve{};
@@ -50,7 +50,6 @@ namespace Components {
 	typedef struct Secondary : public Gun {} Secondary;
 
 	typedef struct Melee : public Weapon {
-		double attack_speed{};
 		double range{};
 	} Melee;
 
@@ -65,6 +64,7 @@ namespace Components {
 		Vec2 target_dir{};
 		WeaponType curr_type{};
 		Weapon* curr_wep{};
+		std::vector<Weapon*> weapons{};
 	} Player;
 
 	typedef struct AmmoDisplay {
