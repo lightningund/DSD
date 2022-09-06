@@ -6,6 +6,8 @@
 #include "Components.h"
 #include "EntityManager.h"
 
+constexpr Vec2 INV_VEC = Vec2{INFINITY, INFINITY};
+
 void update(sf::RenderWindow& wind, EntityManager& manager);
 void render(sf::RenderWindow& wind, EntityManager& manager);
 
@@ -130,13 +132,64 @@ void damage_entity(const double amnt, const EntityID entity, const EntityManager
 	health->health -= amnt;
 }
 
-//EntityID find_shot_intersection(const Vec2 start_pos, const double angle, EntityManager& manager) {
-//	ComponentMask health_mask = create_mask<Health>();
-//	for (EntityID entity : SceneView(manager, health_mask)) {
-//
-//	}
-//	return 0;
-//}
+Vec2 cast_ray(Vec2 ray_pos, Vec2 ray_dir, Vec2 line_a, Vec2 line_b) {
+	double x1 = line_a.x;
+	double y1 = line_a.y;
+	double x2 = line_b.x;
+	double y2 = line_b.y;
+
+	double dir_len = ray_dir.get_length();
+
+	double x3 = ray_pos.x;
+	double y3 = ray_pos.y;
+	double x4 = ray_pos.x + (ray_dir.x / dir_len);
+	double y4 = ray_pos.y + (ray_dir.y / dir_len);
+
+	double denom = ((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4));
+	if (denom == 0) return INV_VEC;
+
+	double u = ((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denom;
+	if (u >= 0) return INV_VEC;
+
+	double t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom;
+	if (t <= 0 || t >= 1) return INV_VEC;
+
+	return Vec2{x1 + t * (x2 - x1), y1 + t * (y2 - y1)};
+}
+
+EntityID find_shot_intersection(const Vec2 ray_pos, const Vec2 ray_dir, const EntityID origin, EntityManager& manager) {
+	Vec2 hit{};
+	EntityID hit_ent = EntityID(-1);
+
+	double min_dist = INFINITY;
+
+	ComponentMask health_mask = create_mask<Health, Hitbox>();
+	for (EntityID entity : SceneView(manager, health_mask)) {
+		if(entity == origin) continue;
+
+		auto hbox = manager.get_component<Hitbox>(entity);
+		std::vector<Vec2> corners = {
+			hbox->pos,
+			hbox->pos + Vec2{hbox->size.x, 0},
+			hbox->pos + hbox->size,
+			hbox->pos + Vec2{0, hbox->size.y}
+		};
+
+		for (int i = 0; i < 4; i ++) {
+			Vec2 c = cast_ray(ray_pos, ray_dir, corners[i], corners[(i + 1) % 4]);
+			if(c == INV_VEC) continue;
+
+			double d = (c - ray_pos).get_sq_length();
+			if (d < min_dist) {
+				min_dist = d;
+				hit = c;
+				hit_ent = entity;
+			}
+		}
+	}
+
+	return hit_ent;
+}
 
 void player_reload(Player* player) {
 	if (player->curr_type == MELEE) return;
@@ -192,6 +245,13 @@ void shoot(const EntityID player, sf::RenderWindow& wind, EntityManager& manager
 			line[1].color = col_to_sf_color(WHITE);
 
 			wind.draw(line);
+
+			EntityID hit_ent = find_shot_intersection(line_start, player_player->target_dir, player, manager);
+
+			if (hit_ent != EntityID(-1)) {
+				auto target_health = manager.get_component<Health>(hit_ent);
+				target_health->health -= wep->dmg;
+			}
 		} else {
 			player_reload(player_player);
 		}

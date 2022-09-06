@@ -80,20 +80,24 @@ struct Vec2G {
 	T x{};
 	T y{};
 
-	Vec2G() : x{}, y{} {}
+	constexpr Vec2G() : x{}, y{} {}
 
-	Vec2G(const T x, const T y) : x{x}, y{y} {}
+	constexpr Vec2G(const T x, const T y) : x{x}, y{y} {}
 
-	Vec2G(const Vec2G<T>& base) : x{base.x}, y{base.y} {}
-
-	template <typename U>
-	Vec2G(const Vec2G<U>& base) : x{T(base.x)}, y{T(base.y)} {}
+	constexpr Vec2G(const Vec2G<T>& base) : x{base.x}, y{base.y} {}
 
 	template <typename U>
-	Vec2G(const sf::Vector2<U>& base) : x{T(base.x)}, y{T(base.y)} {}
+	constexpr Vec2G(const Vec2G<U>& base) : x{T(base.x)}, y{T(base.y)} {}
+
+	template <typename U>
+	constexpr Vec2G(const sf::Vector2<U>& base) : x{T(base.x)}, y{T(base.y)} {}
 
 	double get_length() const {
 		return sqrt(x * x + y * y);
+	}
+
+	double get_sq_length() const {
+		return x * x + y * y;
 	}
 
 	Vec2G<T> set_length(const double len) {
